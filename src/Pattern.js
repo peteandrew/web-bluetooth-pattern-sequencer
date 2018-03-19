@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import PatternStepList from './PatternStepList';
+import PatternEditControls from './PatternEditControls';
 import LEDGrid from './LEDGrid';
 
 
@@ -15,6 +16,7 @@ const initialState = {
     Uint8Array.of(0x03, 5),
   ],
   numBytes: 22,
+  selectedLed: 0,
 };
 
 class Pattern extends Component {
@@ -28,6 +30,7 @@ class Pattern extends Component {
     this.handleAddStepSingleLedValue = this.handleAddStepSingleLedValue.bind(this);
     this.handleAddStepDelay = this.handleAddStepDelay.bind(this);
     this.handleAddStepAllLedValues = this.handleAddStepAllLedValues.bind(this);
+    this.handleLedSelected = this.handleLedSelected.bind(this);
   }
 
   handleClearPattern() {
@@ -99,13 +102,32 @@ class Pattern extends Component {
     this.updateNumBytes();
   }
 
+  handleLedSelected(ledNum) {
+    this.setState(prevState => {
+      return {
+        ...prevState,
+        selectedLed: ledNum,
+      };
+    });
+  }
+
   render() {
     return (
       <div>
         <PatternStepList
           pattern={this.state.pattern}
         />
-        <LEDGrid />
+        <PatternEditControls
+          handleClearPattern={this.handleClearPattern}
+          handleAddStepClearDisplay={this.handleAddStepClearDisplay}
+          handleAddStepSingleLedValue={this.handleAddStepSingleLedValue}
+          handleAddStepDelay={this.handleAddStepDelay}
+          handleAddStepAllLedValues={this.handleAddStepAllLedValues}
+          selectedLed={this.state.selectedLed} />
+        <LEDGrid
+          selectedLed={this.state.selectedLed}
+          handleLedSelected={this.handleLedSelected}
+        />
       </div>
     );
   }

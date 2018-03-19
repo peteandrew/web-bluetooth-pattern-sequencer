@@ -4,18 +4,39 @@ import PropTypes from 'prop-types';
 
 const LEDGrid = (props) => {
 
-  const { pattern } = props;
+  const { pattern, selectedLed } = props;
+
+  const onCellClick = (ledNum) => {
+    props.handleLedSelected(ledNum);
+  }
 
   const gridCells = [];
   for (let row = 1; row <= props.height; row++) {
     for (let col = 1; col <= props.width; col++) {
-      const key = `row${row}col${col}`;
-      gridCells.push((<div key={key} style={{gridColumn: col, gridRow: row, border: '1px solid black'}}></div>));
+      const ledNum = ((col-1) * 8) + row;
+      const key = `led${ledNum}`;
+
+      gridCells.push((
+        <div
+          key={key}
+          style={
+            {
+              gridColumn: col,
+              gridRow: row,
+              border: ledNum === selectedLed ? '1px solid red' : '1px solid black',
+              width: '20px',
+              height: '20px'
+            }
+          }
+          onClick={onCellClick.bind(this, ledNum)}
+        >
+        </div>
+      ));
     }
   }
 
   return (
-    <div style={{display: 'grid', width: '100%', gridGap: '10px'}}>
+    <div style={{display: 'grid', width: '220px', gridGap: '2px'}}>
       {gridCells.map(cell => cell)}
     </div>
   );
@@ -24,6 +45,8 @@ const LEDGrid = (props) => {
 LEDGrid.propTypes = {
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
+  selectedLed: PropTypes.number,
+  handleLedSelected: PropTypes.func.isRequired,
 };
 
 LEDGrid.defaultProps = {
