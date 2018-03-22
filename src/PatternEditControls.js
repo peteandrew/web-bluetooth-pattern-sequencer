@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
 
 
 class PatternEditControls extends Component {
@@ -21,6 +22,28 @@ class PatternEditControls extends Component {
       stepType: value,
     });
 
+  handleSelectedLedChanged = (evt, value) => {
+    let ledNum = 0;
+    if (value >= 1 && value < 65) {
+      ledNum = parseInt(value);
+    }
+    this.props.handleLedSelected(ledNum);
+  }
+
+  handleLedColourChanged = (evt, value) => {
+    let colourValue = 0;
+    if (value >= 1 && value < 256) {
+      colourValue = parseInt(value);
+    }
+    if (evt.target.id === 'ledRed') {
+      this.props.handleLedColourChanged(colourValue, null, null);
+    } else if (evt.target.id === 'ledGreen') {
+      this.props.handleLedColourChanged(null, colourValue, null);
+    } else if (evt.target.id === 'ledBlue') {
+      this.props.handleLedColourChanged(null, null, colourValue);
+    }
+  }
+
   handleAddStep = () => {
     switch (this.state.stepType) {
       case 'clear':
@@ -30,9 +53,9 @@ class PatternEditControls extends Component {
         this.props.handleAddStepSingleLedValue(
           null,
           this.props.selectedLed,
-          100,
-          50,
-          20
+          this.props.red,
+          this.props.green,
+          this.props.blue,
         );
         break;
       case 'delay':
@@ -44,15 +67,18 @@ class PatternEditControls extends Component {
       case 'all_leds':
         this.props.handleAddStepAllLedValues(
           null,
-          25,
-          50,
-          80
+          this.props.red,
+          this.props.green,
+          this.props.blue,
         );
         break;
     }
   }
 
   render() {
+    const displaySelectedLed = this.state.stepType === 'single_led';
+    const displayLedColour = this.state.stepType === 'single_led' || this.state.stepType === 'all_leds';
+
     return (
       <div>
         <DropDownMenu value={this.state.stepType} onChange={this.handleStepTypeChange}>
@@ -69,7 +95,40 @@ class PatternEditControls extends Component {
             primaryText="All LEDs Step"
             value="all_leds" />
         </DropDownMenu>
-         <RaisedButton label="Add step" onClick={this.handleAddStep} />
+        { displaySelectedLed &&
+          <TextField
+            type="number"
+            floatingLabelText="LED number"
+            value={this.props.selectedLed}
+            onChange={this.handleSelectedLedChanged}
+          />
+        }
+        { displayLedColour &&
+          <div>
+            <TextField
+              id="ledRed"
+              type="number"
+              floatingLabelText="Red"
+              value={this.props.red}
+              onChange={this.handleLedColourChanged}
+            />
+            <TextField
+              id="ledGreen"
+              type="number"
+              floatingLabelText="Green"
+              value={this.props.green}
+              onChange={this.handleLedColourChanged}
+            />
+            <TextField
+              id="ledBlue"
+              type="number"
+              floatingLabelText="Blue"
+              value={this.props.blue}
+              onChange={this.handleLedColourChanged}
+            />
+          </div>
+        }
+        <RaisedButton label="Add step" onClick={this.handleAddStep} />
       </div>
     );
   }
@@ -80,7 +139,12 @@ PatternEditControls.propTypes = {
   handleAddStepSingleLedValue: PropTypes.func.isRequired,
   handleAddStepDelay: PropTypes.func.isRequired,
   handleAddStepAllLedValues: PropTypes.func.isRequired,
+  handleLedSelected: PropTypes.func.isRequired,
+  handleLedColourChanged: PropTypes.func.isRequired,
   selectedLed: PropTypes.number.isRequired,
+  red: PropTypes.number.isRequired,
+  green: PropTypes.number.isRequired,
+  blue: PropTypes.number.isRequired,
 };
 
 export default PatternEditControls;
