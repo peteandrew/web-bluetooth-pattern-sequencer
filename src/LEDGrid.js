@@ -24,8 +24,8 @@ const LEDGrid = (props) => {
               gridColumn: col,
               gridRow: row,
               border: ledNum === selectedLed ? '1px solid red' : '1px solid black',
-              width: '20px',
-              height: '20px'
+              width: '35px',
+              height: '35px'
             }
           }
           onClick={onCellClick.bind(this, ledNum)}
@@ -36,7 +36,7 @@ const LEDGrid = (props) => {
   }
 
   return (
-    <div style={{display: 'grid', width: '220px', gridGap: '2px'}}>
+    <div style={{margin: '15px 0 0 5px', display: 'grid', gridGap: '5px'}}>
       {gridCells.map(cell => cell)}
     </div>
   );

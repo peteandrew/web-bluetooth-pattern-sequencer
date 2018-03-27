@@ -1,4 +1,10 @@
 import React, { Component } from 'react';
+import AppBar from 'material-ui/AppBar';
+import IconButton from 'material-ui/IconButton';
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
+import Drawer from 'material-ui/Drawer';
+import MenuItem from 'material-ui/MenuItem';
+import {Tabs, Tab} from 'material-ui/Tabs';
 
 import PatternStepList from './PatternStepList';
 import PatternEditControls from './PatternEditControls';
@@ -20,6 +26,8 @@ const initialState = {
   red: 0,
   green: 0,
   blue: 0,
+  displayedScreen: 'grid',
+  drawerOpen: false,
 };
 
 class Pattern extends Component {
@@ -28,6 +36,7 @@ class Pattern extends Component {
 
     this.state = initialState;
 
+    this.handleDrawerToggle = this.handleDrawerToggle.bind(this);
     this.handleClearPattern = this.handleClearPattern.bind(this);
     this.handleAddStepClearDisplay = this.handleAddStepClearDisplay.bind(this);
     this.handleAddStepSingleLedValue = this.handleAddStepSingleLedValue.bind(this);
@@ -35,6 +44,10 @@ class Pattern extends Component {
     this.handleAddStepAllLedValues = this.handleAddStepAllLedValues.bind(this);
     this.handleLedSelected = this.handleLedSelected.bind(this);
     this.handleLedColourChanged = this.handleLedColourChanged.bind(this);
+  }
+
+  handleDrawerToggle() {
+    this.setState({drawerOpen: !this.state.drawerOpen});
   }
 
   handleClearPattern() {
@@ -139,26 +152,54 @@ class Pattern extends Component {
   render() {
     return (
       <div>
-        <PatternStepList
-          pattern={this.state.pattern}
+        <AppBar
+          title="Pattern Sequencer"
+          onLeftIconButtonClick={this.handleDrawerToggle}
         />
-        <PatternEditControls
-          handleClearPattern={this.handleClearPattern}
-          handleAddStepClearDisplay={this.handleAddStepClearDisplay}
-          handleAddStepSingleLedValue={this.handleAddStepSingleLedValue}
-          handleAddStepDelay={this.handleAddStepDelay}
-          handleAddStepAllLedValues={this.handleAddStepAllLedValues}
-          handleLedSelected={this.handleLedSelected}
-          handleLedColourChanged={this.handleLedColourChanged}
-          selectedLed={this.state.selectedLed}
-          red={this.state.red}
-          green={this.state.green}
-          blue={this.state.blue}
-        />
-        <LEDGrid
-          selectedLed={this.state.selectedLed}
-          handleLedSelected={this.handleLedSelected}
-        />
+        <Drawer
+          docked={false}
+          width={200}
+          open={this.state.drawerOpen}
+          onRequestChange={(open) => this.setState({drawerOpen: open})}
+        >
+          <AppBar
+            title="Menu"
+            onLeftIconButtonClick={this.handleDrawerToggle}
+            iconElementLeft={<IconButton><NavigationClose /></IconButton>}
+          />
+          <MenuItem>Menu Item</MenuItem>
+          <MenuItem>Menu Item 2</MenuItem>
+        </Drawer>
+        <Tabs>
+          <Tab label="Grid">
+            <div>
+              <LEDGrid
+                selectedLed={this.state.selectedLed}
+                handleLedSelected={this.handleLedSelected}
+              />
+              <PatternEditControls
+                handleClearPattern={this.handleClearPattern}
+                handleAddStepClearDisplay={this.handleAddStepClearDisplay}
+                handleAddStepSingleLedValue={this.handleAddStepSingleLedValue}
+                handleAddStepDelay={this.handleAddStepDelay}
+                handleAddStepAllLedValues={this.handleAddStepAllLedValues}
+                handleLedSelected={this.handleLedSelected}
+                handleLedColourChanged={this.handleLedColourChanged}
+                selectedLed={this.state.selectedLed}
+                red={this.state.red}
+                green={this.state.green}
+                blue={this.state.blue}
+              />
+            </div>
+          </Tab>
+          <Tab label="Step List">
+            <div>
+              <PatternStepList
+                pattern={this.state.pattern}
+              />
+            </div>
+          </Tab>
+        </Tabs>
       </div>
     );
   }
