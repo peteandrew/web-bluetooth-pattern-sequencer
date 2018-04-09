@@ -79,56 +79,103 @@ class PatternEditControls extends Component {
     const displaySelectedLed = this.state.stepType === 'single_led';
     const displayLedColour = this.state.stepType === 'single_led' || this.state.stepType === 'all_leds';
 
+    // { displayLedColour &&
+    //   <div>
+    //     <TextField
+    //       id="ledRed"
+    //       type="number"
+    //       floatingLabelText="Red"
+    //       value={this.props.red}
+    //       onChange={this.handleLedColourChanged}
+    //     />
+    //     <TextField
+    //       id="ledGreen"
+    //       type="number"
+    //       floatingLabelText="Green"
+    //       value={this.props.green}
+    //       onChange={this.handleLedColourChanged}
+    //     />
+    //     <TextField
+    //       id="ledBlue"
+    //       type="number"
+    //       floatingLabelText="Blue"
+    //       value={this.props.blue}
+    //       onChange={this.handleLedColourChanged}
+    //     />
+    //   </div>
+    // }
+
     return (
-      <div>
-        <DropDownMenu value={this.state.stepType} onChange={this.handleStepTypeChange}>
-          <MenuItem
-            primaryText="Clear Display Step"
-            value="clear" />
-          <MenuItem
-            primaryText="Single LED Step"
-            value="single_led" />
-          <MenuItem
-            primaryText="Delay Step"
-            value="delay" />
-          <MenuItem
-            primaryText="All LEDs Step"
-            value="all_leds" />
-        </DropDownMenu>
-        { displaySelectedLed &&
-          <TextField
-            type="number"
-            floatingLabelText="LED number"
-            value={this.props.selectedLed}
-            onChange={this.handleSelectedLedChanged}
+      <div style={{marginTop: '15px'}}>
+        <div>
+          <DropDownMenu
+              value={this.state.stepType}
+              onChange={this.handleStepTypeChange}
+              style={{verticalAlign: 'bottom', minWidth: '50%'}}
+              labelStyle={{paddingLeft: '10px'}}
+              underlineStyle={{marginLeft: '10px'}}
+          >
+            <MenuItem
+              primaryText="Clear Display Step"
+              value="clear" />
+            <MenuItem
+              primaryText="Single LED Step"
+              value="single_led" />
+            <MenuItem
+              primaryText="Delay Step"
+              value="delay" />
+            <MenuItem
+              primaryText="All LEDs Step"
+              value="all_leds" />
+          </DropDownMenu>
+          <RaisedButton
+              label="Add step"
+              onClick={this.handleAddStep}
+              style={{minWidth: '40%'}}
           />
-        }
-        { displayLedColour &&
-          <div>
+        </div>
+        <div>
+          { displaySelectedLed &&
             <TextField
-              id="ledRed"
               type="number"
-              floatingLabelText="Red"
-              value={this.props.red}
-              onChange={this.handleLedColourChanged}
+              floatingLabelText="LED number"
+              value={this.props.selectedLed}
+              onChange={this.handleSelectedLedChanged}
+              style={{width: '40%', marginLeft: '10px'}}
             />
-            <TextField
-              id="ledGreen"
-              type="number"
-              floatingLabelText="Green"
-              value={this.props.green}
-              onChange={this.handleLedColourChanged}
-            />
-            <TextField
-              id="ledBlue"
-              type="number"
-              floatingLabelText="Blue"
-              value={this.props.blue}
-              onChange={this.handleLedColourChanged}
-            />
-          </div>
-        }
-        <RaisedButton label="Add step" onClick={this.handleAddStep} />
+          }
+          { displayLedColour &&
+            <div style={{
+                display: 'inline-block',
+                width: '40%',
+                fontSize: '12px',
+                lineHeight: '24px',
+                position: 'relative',
+                fontFamily: 'Roboto, sans-serif',
+                marginLeft: '25px',
+                height: '72px',
+                verticalAlign: 'top',
+              }}
+            >
+              <p style={{
+                  color: 'rgba(0,0,0,0.3)',
+                  lineHeight: '12px',
+                  margin: 0,
+                  position: 'absolute',
+                  top: '20px',
+              }}>Colour</p>
+              <div
+                style={{
+                    width: '27px',
+                    height: '27px',
+                    border: '1px solid #aaaaaa',
+                    position: 'absolute',
+                    top: '35px',
+                }}
+              />
+            </div>
+          }
+        </div>
       </div>
     );
   }
