@@ -6,6 +6,8 @@ import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 
+import ColourInput from './ColourInput';
+
 
 class PatternEditControls extends Component {
 
@@ -14,6 +16,10 @@ class PatternEditControls extends Component {
 
     this.state = {
       stepType: 'clear',
+      colourInputDisplayed: false,
+      ledColourRed: 0,
+      ledColourGreen: 0,
+      ledColourBlue: 0,
     };
   }
 
@@ -22,26 +28,17 @@ class PatternEditControls extends Component {
       stepType: value,
     });
 
+  handleColourSwatchClicked = () =>
+    this.setState({
+      colourInputDisplayed: true,
+    });
+
   handleSelectedLedChanged = (evt, value) => {
     let ledNum = 0;
     if (value >= 1 && value < 65) {
       ledNum = parseInt(value);
     }
     this.props.handleLedSelected(ledNum);
-  }
-
-  handleLedColourChanged = (evt, value) => {
-    let colourValue = 0;
-    if (value >= 1 && value < 256) {
-      colourValue = parseInt(value);
-    }
-    if (evt.target.id === 'ledRed') {
-      this.props.handleLedColourChanged(colourValue, null, null);
-    } else if (evt.target.id === 'ledGreen') {
-      this.props.handleLedColourChanged(null, colourValue, null);
-    } else if (evt.target.id === 'ledBlue') {
-      this.props.handleLedColourChanged(null, null, colourValue);
-    }
   }
 
   handleAddStep = () => {
@@ -53,9 +50,9 @@ class PatternEditControls extends Component {
         this.props.handleAddStepSingleLedValue(
           null,
           this.props.selectedLed,
-          this.props.red,
-          this.props.green,
-          this.props.blue,
+          this.state.ledColourRed,
+          this.state.ledColourGreen,
+          this.state.ledColourBlue,
         );
         break;
       case 'delay':
@@ -67,9 +64,9 @@ class PatternEditControls extends Component {
       case 'all_leds':
         this.props.handleAddStepAllLedValues(
           null,
-          this.props.red,
-          this.props.green,
-          this.props.blue,
+          this.state.ledColourRed,
+          this.state.ledColourGreen,
+          this.state.ledColourBlue,
         );
         break;
     }
@@ -79,31 +76,24 @@ class PatternEditControls extends Component {
     const displaySelectedLed = this.state.stepType === 'single_led';
     const displayLedColour = this.state.stepType === 'single_led' || this.state.stepType === 'all_leds';
 
-    // { displayLedColour &&
-    //   <div>
-    //     <TextField
-    //       id="ledRed"
-    //       type="number"
-    //       floatingLabelText="Red"
-    //       value={this.props.red}
-    //       onChange={this.handleLedColourChanged}
-    //     />
-    //     <TextField
-    //       id="ledGreen"
-    //       type="number"
-    //       floatingLabelText="Green"
-    //       value={this.props.green}
-    //       onChange={this.handleLedColourChanged}
-    //     />
-    //     <TextField
-    //       id="ledBlue"
-    //       type="number"
-    //       floatingLabelText="Blue"
-    //       value={this.props.blue}
-    //       onChange={this.handleLedColourChanged}
-    //     />
-    //   </div>
-    // }
+    const ledColourSwatchStyle = {
+      width: '27px',
+      height: '27px',
+      border: '1px solid #aaaaaa',
+      position: 'absolute',
+      top: '35px',
+    };
+
+    let ledColourHexRed = this.state.ledColourRed.toString(16);
+    if (ledColourHexRed.length === 1) ledColourHexRed = '0' + ledColourHexRed;
+    let ledColourHexGreen = this.state.ledColourGreen.toString(16);
+    if (ledColourHexGreen.length === 1) ledColourHexGreen = '0' + ledColourHexGreen;
+    let ledColourHexBlue = this.state.ledColourBlue.toString(16);
+    if (ledColourHexBlue.length === 1) ledColourHexBlue = '0' + ledColourHexBlue;
+
+    const ledColourHex = '#' + ledColourHexRed + ledColourHexGreen + ledColourHexBlue;
+
+    ledColourSwatchStyle.backgroundColor = ledColourHex;
 
     return (
       <div style={{marginTop: '15px'}}>
@@ -165,17 +155,27 @@ class PatternEditControls extends Component {
                   top: '20px',
               }}>Colour</p>
               <div
-                style={{
-                    width: '27px',
-                    height: '27px',
-                    border: '1px solid #aaaaaa',
-                    position: 'absolute',
-                    top: '35px',
-                }}
+                style={ledColourSwatchStyle}
+                onClick={this.handleColourSwatchClicked}
               />
             </div>
           }
         </div>
+        { this.state.colourInputDisplayed &&
+          <ColourInput
+            red={this.state.ledColourRed}
+            green={this.state.ledColourGreen}
+            blue={this.state.ledColourBlue}
+            handleDialogClose={()=>this.setState({
+              colourInputDisplayed: false
+            })}
+            handleColourUpdate={(red, green, blue)=>this.setState({
+              ledColourRed: red,
+              ledColourGreen: green,
+              ledColourBlue: blue,
+            })}
+          />
+        }
       </div>
     );
   }
@@ -187,11 +187,7 @@ PatternEditControls.propTypes = {
   handleAddStepDelay: PropTypes.func.isRequired,
   handleAddStepAllLedValues: PropTypes.func.isRequired,
   handleLedSelected: PropTypes.func.isRequired,
-  handleLedColourChanged: PropTypes.func.isRequired,
   selectedLed: PropTypes.number.isRequired,
-  red: PropTypes.number.isRequired,
-  green: PropTypes.number.isRequired,
-  blue: PropTypes.number.isRequired,
 };
 
 export default PatternEditControls;

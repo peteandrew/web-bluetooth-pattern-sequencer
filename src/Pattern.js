@@ -23,9 +23,6 @@ const initialState = {
   ],
   numBytes: 22,
   selectedLed: 0,
-  red: 0,
-  green: 0,
-  blue: 0,
   displayedScreen: 'grid',
   drawerOpen: false,
 };
@@ -43,7 +40,6 @@ class Pattern extends Component {
     this.handleAddStepDelay = this.handleAddStepDelay.bind(this);
     this.handleAddStepAllLedValues = this.handleAddStepAllLedValues.bind(this);
     this.handleLedSelected = this.handleLedSelected.bind(this);
-    this.handleLedColourChanged = this.handleLedColourChanged.bind(this);
   }
 
   handleDrawerToggle() {
@@ -128,27 +124,6 @@ class Pattern extends Component {
     });
   }
 
-  handleLedColourChanged(red, green, blue) {
-    this.setState(prevState => {
-      if (red !== null) {
-        return {
-          ...prevState,
-          red,
-        }
-      } else if (green !== null) {
-        return {
-          ...prevState,
-          green,
-        }
-      } else if (blue !== null) {
-        return {
-          ...prevState,
-          blue,
-        }
-      }
-    });
-  }
-
   render() {
     return (
       <div>
@@ -186,9 +161,6 @@ class Pattern extends Component {
                 handleLedSelected={this.handleLedSelected}
                 handleLedColourChanged={this.handleLedColourChanged}
                 selectedLed={this.state.selectedLed}
-                red={this.state.red}
-                green={this.state.green}
-                blue={this.state.blue}
               />
             </div>
           </Tab>
