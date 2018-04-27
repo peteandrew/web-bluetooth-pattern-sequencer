@@ -5,6 +5,8 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 
+import LedColourSwatch from './LedColourSwatch';
+
 class ColourInput extends Component {
 
   constructor(props) {
@@ -35,13 +37,11 @@ class ColourInput extends Component {
     const actions = [
       <FlatButton
         label="Cancel"
-        primary={true}
         onClick={this.props.handleDialogClose}
       />,
       <FlatButton
         label="Update colour"
         primary={true}
-        keyboardFocused={true}
         onClick={() => {
           this.props.handleColourUpdate(
             this.state.red,
@@ -62,10 +62,16 @@ class ColourInput extends Component {
         onRequestClose={this.props.handleDialogClose}
       >
         <div>
+          <LedColourSwatch
+            ledColourRed={this.state.red}
+            ledColourGreen={this.state.green}
+            ledColourBlue={this.state.blue}
+          />
           <TextField
             id="ledRed"
             type="number"
             floatingLabelText="Red"
+            fullWidth={true}
             value={this.state.red}
             onChange={this.handleLedColourChanged}
           />
@@ -73,6 +79,7 @@ class ColourInput extends Component {
             id="ledGreen"
             type="number"
             floatingLabelText="Green"
+            fullWidth={true}
             value={this.state.green}
             onChange={this.handleLedColourChanged}
           />
@@ -80,6 +87,7 @@ class ColourInput extends Component {
             id="ledBlue"
             type="number"
             floatingLabelText="Blue"
+            fullWidth={true}
             value={this.state.blue}
             onChange={this.handleLedColourChanged}
           />

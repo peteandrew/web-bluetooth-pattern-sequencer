@@ -7,6 +7,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 
 import ColourInput from './ColourInput';
+import LedColourSwatch from './LedColourSwatch';
 
 
 class PatternEditControls extends Component {
@@ -135,30 +136,12 @@ class PatternEditControls extends Component {
             />
           }
           { displayLedColour &&
-            <div style={{
-                display: 'inline-block',
-                width: '40%',
-                fontSize: '12px',
-                lineHeight: '24px',
-                position: 'relative',
-                fontFamily: 'Roboto, sans-serif',
-                marginLeft: '25px',
-                height: '72px',
-                verticalAlign: 'top',
-              }}
-            >
-              <p style={{
-                  color: 'rgba(0,0,0,0.3)',
-                  lineHeight: '12px',
-                  margin: 0,
-                  position: 'absolute',
-                  top: '20px',
-              }}>Colour</p>
-              <div
-                style={ledColourSwatchStyle}
-                onClick={this.handleColourSwatchClicked}
-              />
-            </div>
+            <LedColourSwatch
+              ledColourRed={this.state.ledColourRed}
+              ledColourGreen={this.state.ledColourGreen}
+              ledColourBlue={this.state.ledColourBlue}
+              onSwatchClicked={this.handleColourSwatchClicked}
+            />
           }
         </div>
         { this.state.colourInputDisplayed &&
